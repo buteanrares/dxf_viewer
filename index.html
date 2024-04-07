@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Draw Lines from DXF using Three.js</title>
+    <style>
+      body {
+        margin: 0;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+      const extractedCoordinates = [
+        { x1: 45, y1: 45, x2: 45, y2: -45 },
+        { x1: 45, y1: -45, x2: 0, y2: 0 },
+        { x1: 0, y1: 0, x2: -45, y2: 45 },
+        { x1: -45, y1: 45, x2: 45, y2: 45 },
+        { x1: 45, y1: 45, x2: 0, y2: 0 },
+        { x1: 0, y1: 0, x2: 0, y2: 0 },
+        { x1: 0, y1: 0, x2: -45, y2: -45 },
+        { x1: -45, y1: -45, x2: 45, y2: 45 },
+        { x1: 45, y1: -45, x2: -45, y2: -45 },
+        { x1: -45, y1: -45, x2: -45, y2: 45 },
+        { x1: -45, y1: 45, x2: 0, y2: 0 },
+        { x1: 0, y1: 0, x2: 45, y2: -45 },
+      ];
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      extractedCoordinates.forEach((coord) => {
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array([
+          coord.x1,
+          coord.y1,
+          0,
+          coord.x2,
+          coord.y2,
+          0,
+        ]);
+        geometry.setAttribute(
+          "position",
+          new THREE.BufferAttribute(positions, 3)
+        );
+        const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
+        const line = new THREE.Line(geometry, material);
+        scene.add(line);
+      });
+
+      camera.position.z = 100;
+
+      function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+      }
+      animate();
+    </script>
+  </body>
+</html>
